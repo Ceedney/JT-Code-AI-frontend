@@ -171,21 +171,20 @@ export function BillingPage() {
       {/* Summary cards */}
       <div className="grid gap-4 md:grid-cols-3 mb-8">
         {summaryCards.map((card) => (
-          <Card key={card.label} className="border border-border/60 shadow-sm hover:shadow-md transition-shadow rounded-xl">
+          <Card key={card.label} className="rounded-xl border-border/60">
             <CardContent className="p-5">
               <div className="flex items-start justify-between mb-3">
                 <span className="text-sm text-muted-foreground">{card.label}</span>
-                <div className={`p-2 rounded-lg ${card.bg} ${card.tint}`}>
+                <div className={`p-2 rounded-lg ring-1 ring-current/10 ${card.bg} ${card.tint}`}>
                   <card.icon size={18} />
                 </div>
               </div>
-              <div className="text-lg font-semibold text-foreground">{card.value}</div>
+              <div className="text-xl font-semibold text-foreground">{card.value}</div>
               {card.helper && <div className="text-xs text-muted-foreground mt-1">{card.helper}</div>}
               {card.action && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="mt-3 h-auto px-0 py-0 text-sm font-semibold text-blue-600 hover:text-blue-700 hover:bg-transparent dark:text-blue-400 dark:hover:text-blue-300"
+                <button
+                  type="button"
+                  className="mt-3 inline-flex items-center gap-1 rounded-sm text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
                   onClick={() => {
                     if (card.actionKey === 'credits') setShowTopupDialog(true);
                     else if (card.actionKey === 'plan') {
@@ -194,7 +193,7 @@ export function BillingPage() {
                   }}
                 >
                   {card.action}
-                </Button>
+                </button>
               )}
             </CardContent>
           </Card>
@@ -202,7 +201,7 @@ export function BillingPage() {
       </div>
 
       {/* Usage bar */}
-      <Card className="mb-8 border border-border/60 shadow-sm rounded-xl">
+      <Card className="mb-8 rounded-xl border-border/60">
         <CardContent className="p-5">
           <div className="flex items-center justify-between mb-3">
             <div>
@@ -218,9 +217,16 @@ export function BillingPage() {
               {t('billing.usage.left', { amount: remainingCredits.toLocaleString(i18n.language) })}
             </div>
           </div>
-          <div className="h-2.5 w-full rounded-full bg-secondary overflow-hidden">
+          <div
+            className="h-2.5 w-full rounded-full bg-secondary overflow-hidden shadow-inner"
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={Math.round(usagePercent)}
+            aria-label={t('billing.usage.title')}
+          >
             <div
-              className="h-full rounded-full bg-gradient-to-r from-blue-500 to-violet-500 transition-all duration-500"
+              className="h-full rounded-full bg-gradient-to-r from-blue-500 to-violet-500 shadow-[0_0_10px_var(--glow)] transition-all duration-700 ease-out"
               style={{ width: `${usagePercent}%` }}
             />
           </div>
@@ -257,8 +263,9 @@ export function BillingPage() {
             return (
               <Card
                 key={plan.id}
-                className={`relative flex flex-col transition-all rounded-xl ${
-                  highlighted ? 'border-2 border-blue-500 shadow-lg' : 'border border-border/60 shadow-sm hover:shadow-md'
+                interactive={!highlighted}
+                className={`relative flex flex-col rounded-xl ${
+                  highlighted ? 'border-2 border-blue-500 shadow-lg ring-4 ring-blue-500/10' : 'border-border/60'
                 }`}
               >
                 {ribbonText && (
@@ -274,7 +281,7 @@ export function BillingPage() {
                 </CardHeader>
                 <CardContent className="flex-1 flex flex-col">
                   <div className="flex items-baseline gap-1 mb-5">
-                    <span className="text-3xl font-bold text-foreground">
+                    <span className="text-3xl font-bold text-foreground tabular-nums">
                       {plan.custom ? t('billing.plans.customPrice') : formatCents(plan.priceCents)}
                     </span>
                     {!plan.custom && <span className="text-sm text-muted-foreground">{t('billing.plans.perMonth')}</span>}
@@ -282,7 +289,7 @@ export function BillingPage() {
                   <ul className="space-y-3 mb-6 flex-1">
                     {featureList.map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
-                        <Check size={14} className="mt-0.5 text-blue-600 flex-shrink-0" />
+                        <Check size={14} className="mt-0.5 text-blue-600 shrink-0" />
                         <span>{feature}</span>
                       </li>
                     ))}
@@ -304,7 +311,7 @@ export function BillingPage() {
 
       {/* Bottom grid */}
       <div className="grid gap-6 lg:grid-cols-2 mb-8">
-        <Card className="border border-border/60 shadow-sm rounded-xl">
+        <Card className="rounded-xl border-border/60">
           <CardHeader className="pb-3">
             <CardTitle className="text-base font-semibold text-foreground">{t('billing.payment.title')}</CardTitle>
           </CardHeader>
@@ -317,7 +324,10 @@ export function BillingPage() {
               </p>
             </div>
             {paymentMethods.map((pm) => (
-              <div key={pm.id} className="flex items-center gap-4 p-3 rounded-xl border border-border bg-card">
+              <div
+                key={pm.id}
+                className="flex items-center gap-4 p-3 rounded-xl border border-border bg-card transition-colors hover:bg-muted/40"
+              >
                 <div className="p-2.5 rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-950/30">
                   {pm.type === 'paypal' ? <Wallet size={22} /> : pm.type === 'mtn' || pm.type === 'airtel' ? <Smartphone size={22} /> : <CreditCard size={22} />}
                 </div>
@@ -339,35 +349,34 @@ export function BillingPage() {
           </CardContent>
         </Card>
 
-        <Card className="border border-border/60 shadow-sm rounded-xl">
+        <Card className="rounded-xl border-border/60">
           <CardHeader className="flex flex-row items-center justify-between pb-3">
             <CardTitle className="text-base font-semibold text-foreground">{t('billing.invoices.title')}</CardTitle>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-auto px-0 py-0 text-sm font-semibold text-blue-600 hover:text-blue-700 hover:bg-transparent dark:text-blue-400 dark:hover:text-blue-300 gap-1"
+            <button
+              type="button"
+              className="inline-flex items-center gap-1 rounded-sm text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
               onClick={() => setShowInvoicesDialog(true)}
             >
               {t('billing.invoices.viewAll')} <span>→</span>
-            </Button>
+            </button>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-left text-muted-foreground border-b">
-                    <th className="pb-2 font-medium">{t('billing.invoices.date')}</th>
-                    <th className="pb-2 font-medium">{t('billing.invoices.description')}</th>
-                    <th className="pb-2 font-medium">{t('billing.invoices.amount')}</th>
-                    <th className="pb-2 font-medium">{t('billing.invoices.status')}</th>
+                  <tr className="text-start text-muted-foreground border-b">
+                    <th className="pb-2 font-medium text-start">{t('billing.invoices.date')}</th>
+                    <th className="pb-2 font-medium text-start">{t('billing.invoices.description')}</th>
+                    <th className="pb-2 font-medium text-start">{t('billing.invoices.amount')}</th>
+                    <th className="pb-2 font-medium text-start">{t('billing.invoices.status')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {invoices.slice(0, 3).map((invoice) => (
-                    <tr key={invoice.id} className="border-b last:border-0">
+                    <tr key={invoice.id} className="border-b last:border-0 transition-colors hover:bg-muted/40">
                       <td className="py-3 text-muted-foreground">{invoice.date}</td>
                       <td className="py-3 font-medium text-foreground">{invoice.description}</td>
-                      <td className="py-3 text-foreground">{invoice.amount}</td>
+                      <td className="py-3 text-foreground tabular-nums">{invoice.amount}</td>
                       <td className="py-3"><Badge variant="success" className="text-xs">{invoice.status}</Badge></td>
                     </tr>
                   ))}
@@ -391,9 +400,9 @@ export function BillingPage() {
             value={topupAmount}
             onChange={(e) => setTopupAmount(e.target.value)}
           />
-          <div className="p-4 rounded-lg bg-secondary">
+          <div className="p-4 rounded-xl bg-secondary border border-border/60">
             <div className="text-sm text-muted-foreground">{t('billing.topup.estimatedCredits')}</div>
-            <div className="text-2xl font-bold text-primary mt-1">
+            <div className="text-2xl font-bold text-primary mt-1 tabular-nums">
               {topupAmount && !Number.isNaN(Number(topupAmount))
                 ? (Number(topupAmount) / 0.01).toLocaleString(i18n.language)
                 : '—'}
@@ -433,8 +442,8 @@ export function BillingPage() {
                     {invoice.id} · {invoice.date} · {invoice.paymentMethod} · {invoice.country}
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="font-semibold text-foreground">{invoice.amount}</div>
+                <div className="text-end">
+                  <div className="font-semibold text-foreground tabular-nums">{invoice.amount}</div>
                   <Badge variant="success" className="text-xs mt-1">{invoice.status}</Badge>
                 </div>
               </div>
@@ -444,7 +453,7 @@ export function BillingPage() {
                     {invoice.items.map((item, i) => (
                       <tr key={i} className="text-muted-foreground">
                         <td className="py-1">{item.description}</td>
-                        <td className="py-1 text-right text-foreground">{item.amount}</td>
+                        <td className="py-1 text-end text-foreground tabular-nums">{item.amount}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -475,7 +484,7 @@ export function BillingPage() {
                 <div className="font-semibold text-foreground">{t('billing.checkout.planSuffix', { name: checkoutPlan.name })}</div>
                 <div className="text-xs text-muted-foreground">{checkoutPlan.custom ? t('billing.checkout.customPricing') : t('billing.checkout.billedMonthly')}</div>
               </div>
-              <div className="text-lg font-bold text-foreground">{checkoutPlan.custom ? t('billing.plans.customPrice') : formatCents(checkoutPlan.priceCents)}</div>
+              <div className="text-lg font-bold text-foreground tabular-nums">{checkoutPlan.custom ? t('billing.plans.customPrice') : formatCents(checkoutPlan.priceCents)}</div>
             </div>
             <PaymentPicker country={country} method={method} setMethod={setMethod} mobileProvider={mobileProvider} setMobileProvider={setMobileProvider} phone={phone} setPhone={setPhone} />
             <div className="flex justify-end gap-2">
@@ -517,7 +526,7 @@ function PaymentPicker({
       ]
     : [
         { value: 'card', label: t('billing.payment.pickerCard'), icon: CreditCard },
-        { value: 'paypal', label: t('billing.payment.methods.paypal'), icon: CreditCard },
+        { value: 'paypal', label: t('billing.payment.methods.paypal'), icon: Wallet },
       ];
 
   return (
@@ -528,8 +537,11 @@ function PaymentPicker({
             key={opt.value}
             type="button"
             onClick={() => setMethod(opt.value)}
-            className={`flex items-center justify-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition-colors ${
-              method === opt.value ? 'border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300' : 'border-border hover:bg-secondary'
+            aria-pressed={method === opt.value}
+            className={`flex items-center justify-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition-all duration-150 active:scale-[0.98] ${
+              method === opt.value
+                ? 'border-blue-500 bg-blue-50 text-blue-700 ring-2 ring-blue-500/20 dark:bg-blue-950/40 dark:text-blue-300'
+                : 'border-border hover:bg-secondary hover:border-ring/40'
             }`}
           >
             <opt.icon size={16} />
@@ -539,15 +551,18 @@ function PaymentPicker({
       </div>
 
       {method === 'mobile' && (
-        <div className="space-y-3 rounded-lg border border-border p-3">
+        <div className="alert-enter space-y-3 rounded-lg border border-border p-3">
           <div className="grid grid-cols-2 gap-2">
             {(['mtn', 'airtel'] as const).map((provider) => (
               <button
                 key={provider}
                 type="button"
                 onClick={() => setMobileProvider(provider)}
-                className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
-                  mobileProvider === provider ? 'border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300' : 'border-border hover:bg-secondary'
+                aria-pressed={mobileProvider === provider}
+                className={`rounded-lg border px-3 py-2 text-sm transition-all duration-150 active:scale-[0.98] ${
+                  mobileProvider === provider
+                    ? 'border-blue-500 bg-blue-50 text-blue-700 ring-2 ring-blue-500/20 dark:bg-blue-950/40 dark:text-blue-300'
+                    : 'border-border hover:bg-secondary hover:border-ring/40'
                 }`}
               >
                 {provider === 'mtn' ? 'MTN' : 'Airtel'}
@@ -565,7 +580,7 @@ function PaymentPicker({
       )}
 
       {method === 'card' && (
-        <div className="space-y-3 rounded-lg border border-border p-3">
+        <div className="alert-enter space-y-3 rounded-lg border border-border p-3">
           <Input label={t('billing.payment.cardNumberLabel')} placeholder="4242 4242 4242 4242" />
           <div className="grid grid-cols-2 gap-3">
             <Input label={t('billing.payment.expiryLabel')} placeholder="MM / YY" />

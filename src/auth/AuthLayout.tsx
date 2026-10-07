@@ -46,6 +46,17 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
       </header>
 
       <main className="auth-shell">
+        {/* Purely decorative — floating bubble orbs behind the card, no data or logic */}
+        <div className="auth-bubbles" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+          <span />
+          <span />
+          <span />
+          <span />
+        </div>
+
         <div className="auth-shell__panel">{children}</div>
       </main>
 
