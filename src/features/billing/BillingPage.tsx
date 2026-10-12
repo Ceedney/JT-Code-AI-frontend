@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Card, CardContent, CardHeader, CardTitle, Badge, Spinner, Alert, Input, Modal, Select } from '@/shared/components';
+import { Button, Card, CardContent, CardHeader, CardTitle, Badge, Spinner, Alert, Input, Modal, Select, PhoneNumberInput } from '@/shared/components';
 import { formatCents } from '@/features/billing/store';
 import { formatDate } from '@/shared/utils';
 import { useBillingStore, type PaymentMethod, type PaymentMethodType, type Plan } from '@/features/billing/store';
-import { COUNTRY_METADATA } from '@/features/auth/lib/countryMetadata';
+import { COUNTRY_METADATA, getCountryMetadata } from '@/features/auth/lib/countryMetadata';
 import {
   Crown,
   Coins,
@@ -118,8 +118,8 @@ export function BillingPage() {
       value: subscription?.planName || currentPlan?.name || 'Free',
       action: t('billing.summary.managePlan'),
       actionKey: 'plan',
-      tint: 'text-blue-600 dark:text-blue-400',
-      bg: 'bg-blue-50 dark:bg-blue-950/30',
+      tint: 'text-primary',
+      bg: 'bg-accent',
     },
     {
       icon: Coins,
@@ -127,16 +127,16 @@ export function BillingPage() {
       value: `${walletBalance.toLocaleString(i18n.language)} ${t('common.creditsUnit')}`,
       action: t('billing.summary.addCreditsAction'),
       actionKey: 'credits',
-      tint: 'text-emerald-600 dark:text-emerald-400',
-      bg: 'bg-emerald-50 dark:bg-emerald-950/30',
+      tint: 'text-primary',
+      bg: 'bg-accent',
     },
     {
       icon: CalendarDays,
       label: t('billing.summary.renewsOn'),
       value: subscription ? formatDate(subscription.currentPeriodEnd, undefined, i18n.language) : '—',
       helper: subscription ? t('billing.summary.renewsHelper') : undefined,
-      tint: 'text-amber-600 dark:text-amber-400',
-      bg: 'bg-amber-50 dark:bg-amber-950/30',
+      tint: 'text-primary',
+      bg: 'bg-accent',
     },
   ];
 
@@ -150,7 +150,7 @@ export function BillingPage() {
         </div>
         <Button
           onClick={() => setShowTopupDialog(true)}
-          className="gap-1.5 bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500"
+          className="gap-1.5"
         >
           <Plus size={16} />
           {t('billing.addCredits')}
@@ -184,7 +184,7 @@ export function BillingPage() {
               {card.action && (
                 <button
                   type="button"
-                  className="mt-3 inline-flex items-center gap-1 rounded-sm text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                  className="mt-3 inline-flex items-center gap-1 rounded-sm text-sm font-semibold text-primary transition-opacity hover:opacity-75"
                   onClick={() => {
                     if (card.actionKey === 'credits') setShowTopupDialog(true);
                     else if (card.actionKey === 'plan') {
@@ -226,7 +226,7 @@ export function BillingPage() {
             aria-label={t('billing.usage.title')}
           >
             <div
-              className="h-full rounded-full bg-gradient-to-r from-blue-500 to-violet-500 shadow-[0_0_10px_var(--glow)] transition-all duration-700 ease-out"
+              className="billing-progress-fill h-full rounded-full shadow-[0_0_10px_var(--glow)] transition-all duration-700 ease-out"
               style={{ width: `${usagePercent}%` }}
             />
           </div>
@@ -265,11 +265,11 @@ export function BillingPage() {
                 key={plan.id}
                 interactive={!highlighted}
                 className={`relative flex flex-col rounded-xl ${
-                  highlighted ? 'border-2 border-blue-500 shadow-lg ring-4 ring-blue-500/10' : 'border-border/60'
+                  highlighted ? 'border-2 border-primary shadow-lg ring-4 ring-primary/10' : 'border-border/60'
                 }`}
               >
                 {ribbonText && (
-                  <span className="absolute -top-3 end-3 z-10 inline-flex items-center rounded-full bg-blue-600 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-white shadow-md">
+                  <span className="absolute -top-3 end-3 z-10 inline-flex items-center rounded-full bg-primary px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-primary-foreground shadow-md">
                     {ribbonText}
                   </span>
                 )}
@@ -289,7 +289,7 @@ export function BillingPage() {
                   <ul className="space-y-3 mb-6 flex-1">
                     {featureList.map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
-                        <Check size={14} className="mt-0.5 text-blue-600 shrink-0" />
+                        <Check size={14} className="mt-0.5 text-primary shrink-0" />
                         <span>{feature}</span>
                       </li>
                     ))}
@@ -328,7 +328,7 @@ export function BillingPage() {
                 key={pm.id}
                 className="flex items-center gap-4 p-3 rounded-xl border border-border bg-card transition-colors hover:bg-muted/40"
               >
-                <div className="p-2.5 rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-950/30">
+                <div className="p-2.5 rounded-lg bg-accent text-primary">
                   {pm.type === 'paypal' ? <Wallet size={22} /> : pm.type === 'mtn' || pm.type === 'airtel' ? <Smartphone size={22} /> : <CreditCard size={22} />}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -354,7 +354,7 @@ export function BillingPage() {
             <CardTitle className="text-base font-semibold text-foreground">{t('billing.invoices.title')}</CardTitle>
             <button
               type="button"
-              className="inline-flex items-center gap-1 rounded-sm text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+              className="inline-flex items-center gap-1 rounded-sm text-sm font-semibold text-primary transition-opacity hover:opacity-75"
               onClick={() => setShowInvoicesDialog(true)}
             >
               {t('billing.invoices.viewAll')} <span>→</span>
@@ -540,7 +540,7 @@ function PaymentPicker({
             aria-pressed={method === opt.value}
             className={`flex items-center justify-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition-all duration-150 active:scale-[0.98] ${
               method === opt.value
-                ? 'border-blue-500 bg-blue-50 text-blue-700 ring-2 ring-blue-500/20 dark:bg-blue-950/40 dark:text-blue-300'
+                ? 'border-primary bg-accent text-accent-foreground ring-2 ring-ring/20'
                 : 'border-border hover:bg-secondary hover:border-ring/40'
             }`}
           >
@@ -561,7 +561,7 @@ function PaymentPicker({
                 aria-pressed={mobileProvider === provider}
                 className={`rounded-lg border px-3 py-2 text-sm transition-all duration-150 active:scale-[0.98] ${
                   mobileProvider === provider
-                    ? 'border-blue-500 bg-blue-50 text-blue-700 ring-2 ring-blue-500/20 dark:bg-blue-950/40 dark:text-blue-300'
+                    ? 'border-primary bg-accent text-accent-foreground ring-2 ring-ring/20'
                     : 'border-border hover:bg-secondary hover:border-ring/40'
                 }`}
               >
@@ -569,10 +569,9 @@ function PaymentPicker({
               </button>
             ))}
           </div>
-          <Input
+          <PhoneNumberInput
             label={t('billing.payment.phoneLabel')}
-            type="tel"
-            placeholder="+256 7X XXX XXXX"
+            dialCode={getCountryMetadata(country)?.dialCode}
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
           />

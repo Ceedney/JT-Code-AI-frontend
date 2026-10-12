@@ -6,8 +6,8 @@ interface SocialAuthButtonsProps {
   onApple?: () => void;
   disabled?: boolean;
   loadingProvider?: 'google' | 'apple' | null;
-  /** Defaults to 'horizontal' so existing pages (e.g. sign-up) are unaffected. */
-  layout: 'vertical';
+  /** Defaults to horizontal; authentication screens can request a vertical stack. */
+  layout?: 'horizontal' | 'vertical';
 }
 
 function GoogleIcon() {

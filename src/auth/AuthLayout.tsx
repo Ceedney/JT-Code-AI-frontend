@@ -17,11 +17,6 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
   return (
     <div className="auth-page auth-page--centered">
       <header className="auth-topbar">
-        <Link to="/" className="brand auth-brand" aria-label="JT-Code home">
-          <span className="brand-mark">JT</span>
-          <span>JT-Code</span>
-        </Link>
-
         <div className="auth-topbar__actions">
           <button
             type="button"

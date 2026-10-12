@@ -66,7 +66,7 @@ function useTypingSequence(segments: string[], speed = 60) {
       if (!done) setDone(true);
       return;
     }
-    const text = segments[segmentIndex];
+    const text = segments[segmentIndex] ?? '';
     let i = 0;
     const interval = setInterval(() => {
       i += 1;

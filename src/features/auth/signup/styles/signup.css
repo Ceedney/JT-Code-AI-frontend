@@ -27,6 +27,10 @@
   grid-template-columns: 1fr 1fr;
   gap: 0.65rem;
 }
+.social-auth-grid--vertical {
+  grid-template-columns: 1fr;
+  gap: 0.6rem;
+}
 .social-auth-button {
   display: flex;
   align-items: center;

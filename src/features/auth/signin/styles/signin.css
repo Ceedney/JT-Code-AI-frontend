@@ -22,9 +22,7 @@
   margin: 1.5rem 0 1rem;
 }
 
-/* Sign-in's social buttons stack vertically instead of side by side.
-   Scoped to this modifier class only — the sign-up page keeps the
-   shared two-column .social-auth-grid untouched. */
+/* Keep the sign-in provider buttons in the same vertical layout used by sign-up. */
 .social-auth-grid--vertical {
   grid-template-columns: 1fr;
   gap: 0.6rem;

@@ -11,8 +11,8 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(
     const variants = {
       default: 'border-border bg-background',
       destructive: 'border-destructive/50 bg-destructive/10 text-destructive',
-      success: 'border-green-500/50 bg-green-500/10 text-green-900 dark:text-green-100',
-      warning: 'border-yellow-500/50 bg-yellow-500/10 text-yellow-900 dark:text-yellow-100',
+      success: 'border-success/50 bg-success/10 text-success',
+      warning: 'border-warning/50 bg-warning/10 text-warning',
     };
 
     const icons = {

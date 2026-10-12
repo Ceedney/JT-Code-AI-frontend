@@ -15,7 +15,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
         'transition-all duration-200 ease-out',
         interactive
           ? 'hover:-translate-y-0.5 hover:shadow-lg hover:border-ring/30'
-          : 'hover:shadow-md',
+          : '',
         className
       )}
       {...props}

@@ -12,8 +12,8 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
       secondary: 'border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80',
       destructive: 'border-transparent bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/85',
       outline: 'border-border text-foreground hover:bg-muted/50',
-      success: 'border-transparent bg-green-500 text-white shadow-sm hover:bg-green-500/85',
-      warning: 'border-transparent bg-yellow-500 text-white shadow-sm hover:bg-yellow-500/85',
+      success: 'border-transparent bg-success text-success-foreground shadow-sm hover:bg-success/85',
+      warning: 'border-transparent bg-warning text-warning-foreground shadow-sm hover:bg-warning/85',
     };
 
     return (
