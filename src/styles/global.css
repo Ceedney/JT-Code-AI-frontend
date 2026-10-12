@@ -1543,6 +1543,7 @@ html.dark .message.user { background: color-mix(in srgb, var(--primary) 19%, var
   scrollbar-width: thin;
 }
 .workspace :is(th, td) { vertical-align: middle; }
+.workspace #billing-plans > .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
 ::selection { color: var(--primary-foreground); background: var(--primary); }
 
@@ -1550,6 +1551,11 @@ html.dark .message.user { background: color-mix(in srgb, var(--primary) 19%, var
   .workspace-header > :last-child { max-width: 100%; }
   .workspace-header > :last-child .button { min-height: 2.65rem; }
   .workspace table { min-width: 34rem; }
+  .workspace #billing-plans > .grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (min-width: 1200px) {
+  .workspace #billing-plans > .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
 @media (hover: none) {
